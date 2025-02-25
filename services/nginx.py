@@ -3,7 +3,9 @@ from services.env import FLASK_ADMIN_EMAIL
 
 def reload_nginx():
     try:
-        result = subprocess.run(["sudo", "/usr/sbin/nginx", "-s", "reload"], capture_output=True, text=True)
+        command = ["sudo", "/usr/sbin/nginx", "-s", "reload"]
+        print(f"Running command: {' '.join(command)}")
+        result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode != 0:
             return False, result.stderr
         return True, result.stdout # success
@@ -12,7 +14,9 @@ def reload_nginx():
 
 def test_nginx():
     try:
-        result = subprocess.run(["sudo", "/usr/sbin/nginx", "-t"], capture_output=True, text=True)
+        command = ["sudo", "/usr/sbin/nginx", "-t"]
+        print(f"Running command: {' '.join(command)}")
+        result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode != 0:
             return False, result.stderr
         return True, result.stdout # success

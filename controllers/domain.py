@@ -21,6 +21,14 @@ def add_domain_controller(domain: str):
         register, register_message = register_certbot(domain)
         if not register:
             return register_message, 400
+        
+        test, test_message = test_nginx()
+        if not test:
+            return test_message, 400
+        
+        refresh, refresh_message = reload_nginx()
+        if not refresh:
+            return refresh_message, 400
 
         return 'Domain added successfully.', 200
     except Exception as e:
@@ -58,6 +66,14 @@ def edit_domain_controller(old_domain: str, new_domain: str):
         if not register:
             return register_message, 400
 
+        test, test_message = test_nginx()
+        if not test:
+            return test_message, 400
+        
+        refresh, refresh_message = reload_nginx()
+        if not refresh:
+            return refresh_message, 400
+
         return 'Domain updated successfully.', 200
     except Exception as e:
         return f'Error while updating domain: {str(e)}', 400
@@ -68,6 +84,14 @@ def remove_domain_controller(domain: str):
         remove, remove_message = delete_file(domain)
         if not remove:
             return remove_message, 400
+    
+        test, test_message = test_nginx()
+        if not test:
+            return test_message, 400
+        
+        refresh, refresh_message = reload_nginx()
+        if not refresh:
+            return refresh_message, 400
 
         return 'Domain removed successfully.', 200
     except Exception as e:
