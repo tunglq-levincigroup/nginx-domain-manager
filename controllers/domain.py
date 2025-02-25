@@ -6,7 +6,7 @@ from services.nettools import *
 def add_domain_controller(domain: str):
     try:
         if exist_file(domain):
-            return 'Cannot add duplicate domain.', 400
+            return 'Cannot add an exist domain.', 400
 
         dns, dns_message = ping(domain)
         if not dns:
@@ -37,7 +37,7 @@ def edit_domain_controller(old_domain: str, new_domain: str):
             return dns_message, 400
         
         if exist_file(new_domain):
-            return 'Cannot add duplicate domain.', 400
+            return 'Cannot add an exist domain.', 400
 
         backup, backup_message = backup_file(old_domain)
         if not backup:

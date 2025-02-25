@@ -63,7 +63,7 @@ sudo systemctl reload nginx
 
 # Set up nginx manager server with sudo permission
 sudo visudo
-nginx-manager ALL=NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload
+nginx-manager ALL=NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload, /usr/bin/certbot, /usr/bin/certbot-auto
 sudo chmod +x /home/nginx-manager
 
 # Clone project
