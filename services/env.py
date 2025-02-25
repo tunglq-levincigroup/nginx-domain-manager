@@ -1,3 +1,4 @@
 import os
 FLASK_API_KEY = os.getenv("FLASK_API_KEY")
 FLASK_SERVER_IP = os.getenv("FLASK_SERVER_IP")
+FLASK_ADMIN_EMAIL = os.getenv("FLASK_ADMIN_EMAIL")
