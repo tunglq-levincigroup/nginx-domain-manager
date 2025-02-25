@@ -1,3 +1,7 @@
+# Install requirements
+sudo apt update
+sudo apt install nginx certbot python3 python3-certbot-nginx python3.10-venv
+
 # -> built source code
 sudo adduser application
 sudo mkdir -p /home/application/web/application.local/public_html/ 
@@ -7,8 +11,8 @@ sudo usermod -aG www-data application
 
 # -> nginx conf for multi tenants
 sudo adduser nginx-manager
-sudo mkdir /home/nginx-manager/conf.d/*
-sudo chown application:application /home/nginx-manager/conf.d/ -R
+sudo mkdir /home/nginx-manager/conf.d/
+sudo chown nginx-manager:nginx-manager /home/nginx-manager/conf.d/ -R
 sudo usermod -aG nginx-manager www-data
 sudo usermod -aG www-data nginx-manager
 
@@ -19,9 +23,21 @@ sudo vi /etc/nginx/nginx.conf
     include /home/nginx-manager/conf.d/*.conf;
 }
 
+# -> add sample html for test
+su application
+
+mkdir -p /home/application/web/application.local/public_html/application.local
+vi /home/application/web/application.local/public_html/index.html
+
+```html
+<h1>Running</h1>
+```
+
+exit
+
 # -> add sample nginx conf for application.local
 su nginx-manager
-vi conf.d/application.local.conf
+vi /home/nginx-manager/conf.d/application.local.conf
 
 server {
     listen 80;
@@ -35,33 +51,34 @@ server {
     }
 }
 
+exit
+
 # -> reload nginx
-nginx -t
-systemctl reload nginx
+sudo nginx -t
+sudo systemctl reload nginx
 
 # -> Test first config
 # Add host to local computer hosts file
 # Open browser -> application.local
 
-# Set up nginx manager server
+# Set up nginx manager server with sudo permission
 sudo visudo
 nginx-manager ALL=NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload
 sudo chmod +x /home/nginx-manager
 
-# Install certbot 
-sudo apt install certbot python3-certbot-nginx
-
-# Test command
-sudo certbot --nginx -d application.local
-
 # Clone project
-git clone ...
+su nginx-manager
+cd /home/nginx-manager
+git clone git@github.com:tunglq-levincigroup/nginx-domain-manager.git
+
 # edit file .evn
+cd nginx-domain-manager
+cp .env.sample .env
 
 # Set up project
-python -m venv .venv
-./venv/bin/pip install -r requirements.txt
-./venv/bin/gunicorn --bind 0.0.0.0:8000 wsgi:app
+python3 -m venv .venv
+./.venv/bin/pip3 install -r requirements.txt
+./.venv/bin/gunicorn --bind 0.0.0.0:8000 wsgi:app
 
 # Test project run local
 curl http://localhost:8000
