@@ -41,11 +41,13 @@ def edit_domain_controller(old_domain: str, new_domain: str):
 
         backup, backup_message = backup_file(old_domain)
         if not backup:
-            return backup_message, 400
+            print(backup_message)
+            # no return
 
         remove, remove_message = delete_file(old_domain)
         if not remove:
-            return remove_message, 400
+            print(remove_message)
+            # no return
 
         content = generate_http(new_domain)
         write, write_message = write_file(new_domain, content)
