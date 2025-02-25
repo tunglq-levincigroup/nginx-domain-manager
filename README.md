@@ -15,6 +15,7 @@ sudo mkdir /home/nginx-manager/conf.d/
 sudo chown nginx-manager:nginx-manager /home/nginx-manager/conf.d/ -R
 sudo usermod -aG nginx-manager www-data
 sudo usermod -aG www-data nginx-manager
+sudo usermod -aG nginx-manager application
 
 # -> include config to nginx.conf
 sudo vi /etc/nginx/nginx.conf
@@ -69,7 +70,7 @@ sudo chmod +x /home/nginx-manager
 # Clone project
 su nginx-manager
 cd /home/nginx-manager
-git clone git@github.com:tunglq-levincigroup/nginx-domain-manager.git
+git clone git@github.com:tunglq-levincigroup/nginx-domain-manager.git .
 
 # edit file .evn
 cd nginx-domain-manager

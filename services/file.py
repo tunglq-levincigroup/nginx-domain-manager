@@ -1,9 +1,10 @@
 import os
 import shutil
 from datetime import datetime
+from services.env import FLASK_CONFIG_PATH, FLASK_BACKUP
 
-DIR = 'conf.d'
-BACKUP_DIR = 'backup'
+DIR = FLASK_CONFIG_PATH
+BACKUP_DIR = FLASK_BACKUP
 
 def ensure_directory_exists(directory: str):
     """Creates the directory if it does not exist."""
