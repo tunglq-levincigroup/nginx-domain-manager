@@ -2,6 +2,7 @@ from services.file import *
 from services.template import *
 from services.nginx import *
 from services.nettools import *
+from services.certbot import *
 
 def add_domain_controller(domain: str):
     try:
@@ -18,7 +19,7 @@ def add_domain_controller(domain: str):
         if not write:
             return write_message, 400
 
-        register, register_message = register_certbot(domain)
+        register, register_message = register_ssl(domain)
         if not register:
             return register_message, 400
         
@@ -62,7 +63,7 @@ def edit_domain_controller(old_domain: str, new_domain: str):
         if not write:
             return write_message, 400
 
-        register, register_message = register_certbot(new_domain)
+        register, register_message = register_ssl(new_domain)
         if not register:
             return register_message, 400
 

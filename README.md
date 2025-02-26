@@ -1,3 +1,111 @@
+# Nginx Domain Manager
+
+## Summary
+
+This project is used for auto-configuring domain names and providing free Certbot SSL for a multi-tenant system.
+
+## Features
+
+- Create, update, and delete specific domains
+
+## Tech Stack
+
+- **Backend:** Python, Flask, Gunicorn server
+- **Infrastructure services:** Nginx, Certbot
+
+## Prerequisites
+
+- Nginx installed and configured
+- Certbot installed for SSL certificates
+- Python 3.10 or higher
+
+## Folder Structure
+
+```
+nginx-domain-manager/
+|-- controllers/
+|-- services/
+|-- .env
+|-- .env.sample
+|-- app.py
+|-- wsgi.py
+|-- README.md
+```
+
+## Integrations
+
+The Nginx Domain Manager exposes a simple and robust HTTP-based API for managing domain configurations. Below are the available endpoints and their usage examples.
+
+
+
+### CNAME Record Integrations
+
+#### Get TXT info
+Request certbot to generate an TXT record
+
+```json
+Endpoint: GET /cname/get-txt
+
+Request:
+
+curl -X DELETE http://{SERVER_IP}:{SERVER_PORT}/cname/get-txt \
+     -H "Content-Type: application/json" \
+     -d '{"domain": {DOMAIN_NAME}}'
+
+Response:
+
+{
+    "message": "",
+    "data": {
+        "domain": "",
+        "value": "",
+        "ttl": "",
+        "": ""
+    }
+}
+```
+
+#### Verify the TXT record
+Request a verification for ensuring TXT record added correctly.
+
+```json
+Endpoint: GET /cname/verify-txt
+
+Request:
+
+curl -X DELETE http://{SERVER_IP}:{SERVER_PORT}/cname/verify-txt \
+     -H "Content-Type: application/json" \
+     -d '{"domain": {DOMAIN_NAME}}'
+
+Response:
+
+{
+  "message": "Domain removed successfully",
+  "domain": {DOMAIN_NAME}
+}
+```
+
+### Environment Variables
+
+## Environment Variables
+
+| Variable      | Description              |
+| ------------- | ------------------------ |
+| `SERVER_IP`   | IP address of the server |
+| `SERVER_PORT` | Port number for the API  |
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Create a pull request
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 # Install requirements
 sudo apt update
 sudo apt install nginx certbot python3 python3-certbot-nginx python3.10-venv
@@ -21,7 +129,7 @@ sudo usermod -aG nginx-manager application
 sudo vi /etc/nginx/nginx.conf
 {
     ...
-    include /home/nginx-manager/conf.d/*.conf;
+    include include /home/nginx-manager/conf.d/**/*.conf;
 }
 
 # -> add sample html for test
@@ -73,13 +181,44 @@ cd /home/nginx-manager
 git clone git@github.com:tunglq-levincigroup/nginx-domain-manager.git .
 
 # edit file .evn
-cd nginx-domain-manager
+cd /home/nginx-manager/nginx-domain-manager
 cp .env.sample .env
 
 # Set up project
+### For production
+cd /home/nginx-manager/nginx-domain-manager
 python3 -m venv .venv
 ./.venv/bin/pip3 install -r requirements.txt
 ./.venv/bin/gunicorn --bind 0.0.0.0:8000 wsgi:app
+
+exit
+
+### Run with systemd and auto restart on failure
+sudo vi /etc/systemd/system/nginx-manager.service
+
+```ini
+[Unit]
+Description=Nginx Domain Manager
+After=network.target
+
+[Service]
+User=nginx-manager
+Group=nginx-manager
+WorkingDirectory=/home/nginx-manager/nginx-domain-manager
+ExecStart=/home/nginx-manager/nginx-domain-manager/.venv/bin/gunicorn --bind 0.0.0.0:8000 wsgi:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable nginx-manager
+sudo systemctl start nginx-manager
+sudo systemctl status nginx-manager
+```
+
 
 # Test project run local
 curl http://localhost:8000

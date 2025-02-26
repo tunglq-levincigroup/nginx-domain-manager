@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from controllers.base import *
-from controllers.index import index_controller
-from controllers.domain import add_domain_controller, edit_domain_controller, remove_domain_controller
+from controllers.index import *
+from controllers.domain import *
+from controllers.cname import *
 
 app = Flask(__name__)
 
@@ -11,10 +12,6 @@ def index():
 
 @app.post('/domain/add')
 def add_domain():
-    # auth_response = validate_api_key(request.headers)
-    # if auth_response:
-    #     return auth_response
-
     data = get_request_data(request.json, 'domain')
     if isinstance(data, tuple):
         return data
@@ -24,10 +21,6 @@ def add_domain():
 
 @app.put('/domain/edit')
 def edit_domain():
-    # auth_response = validate_api_key(request.headers)
-    # if auth_response:
-    #     return auth_response
-
     data = get_request_data(request.json, 'old_domain', 'new_domain')
     if isinstance(data, tuple):
         return data
@@ -37,12 +30,24 @@ def edit_domain():
 
 @app.delete('/domain/remove')
 def remove_domain():
-    # auth_response = validate_api_key(request.headers)
-    # if auth_response:
-    #     return auth_response
-
     data = get_request_data(request.json, 'domain')
     if isinstance(data, tuple):
         return data
 
     return remove_domain_controller(data['domain'])
+
+@app.post('/cname/get-txt')
+def get_txt():
+    data = get_request_data(request.json, 'domain')
+    if isinstance(data, tuple):
+        return data
+
+    return get_txt_controller(data['domain'])
+
+@app.delete('/cname/validate-txt')
+def validate_txt():
+    data = get_request_data(request.json, 'domain')
+    if isinstance(data, tuple):
+        return data
+
+    return apply_txt_controller(data['domain'])

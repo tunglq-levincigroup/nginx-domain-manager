@@ -1,4 +1,5 @@
 from flask import jsonify
 
 def index_controller():
-    return jsonify({"status": "running"}), 200
+    respose = {"status": "running"}
+    return jsonify(respose), 200
