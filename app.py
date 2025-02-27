@@ -17,21 +17,21 @@ def index():
 @app.route('/domain/add', methods=['POST'])
 def add_domain():
     """Handle POST request to add a new domain."""
-    status, data = get_request_data(request.json, 'base-domain', 'domain')
+    status, data = get_request_data(request.json, 'base_domain', 'domain')
     if not status:
         return data, 400
 
-    return add_domain_controller(data['base-domain'], data['domain'])
+    return add_domain_controller(data['base_domain'], data['domain'])
 
 @app.route('/domain/edit', methods=['PUT'])
 def edit_domain():
     """Handle PUT request to edit an existing domain."""
-    status, data = get_request_data(request.json, 'base-domain', 'old-domain', 'domain')
+    status, data = get_request_data(request.json, 'base_domain', 'old_domain', 'domain')
     if not status:
         return data, 400
     
     return edit_domain_controller(
-        data['base-domain'], data['old-domain'], data['domain']
+        data['base_domain'], data['old_domain'], data['domain']
     )
 
 @app.route('/domain/remove', methods=['DELETE'])
