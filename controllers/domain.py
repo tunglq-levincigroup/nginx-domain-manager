@@ -5,7 +5,7 @@ from services.nettools import ping
 from services.template import generate_nginx_conf
 from utils.env import FLASK_BASE_URLS
 from utils.response import api_response
-from utils.logger import info, warn, error
+from utils.logger import warn
 
 
 def add_domain_controller(base_domain: str, domain: str):

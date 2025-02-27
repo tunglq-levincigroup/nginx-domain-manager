@@ -19,7 +19,7 @@ server {{
     error_log /var/log/nginx/{domain}.error.log;
 
     location / {{
-        proxy_pass {base_domain};
+        proxy_pass https://{base_domain};
         try_files $uri $uri/ =404;
     }}
 }}
