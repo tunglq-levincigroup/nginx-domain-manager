@@ -28,7 +28,7 @@ def add_domain_controller(base_domain: str, domain: str):
             return api_response(400, ping_message)
 
         # Generate the Nginx configuration
-        content = generate_nginx_conf()
+        content = generate_nginx_conf(base_domain, domain)
 
         # Write the domain to the configuration
         write, write_message = write_domain(domain, content)
@@ -87,7 +87,7 @@ def edit_domain_controller(base_domain: str, old_domain: str, domain: str):
             return api_response(400, ping_message)
 
         # Generate the Nginx configuration
-        content = generate_nginx_conf()
+        content = generate_nginx_conf(base_domain, domain)
 
         # Write the new domain to the configuration
         write, write_message = write_domain(domain, content)
