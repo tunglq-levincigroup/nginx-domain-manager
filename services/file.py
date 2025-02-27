@@ -1,7 +1,7 @@
 import os
 import shutil
 from datetime import datetime
-from services.env import FLASK_CONFIG_PATH, FLASK_BACKUP
+from utils.env import FLASK_CONFIG_PATH, FLASK_BACKUP
 
 DIR = FLASK_CONFIG_PATH
 BACKUP_DIR = FLASK_BACKUP
@@ -11,7 +11,7 @@ def ensure_directory_exists(directory: str):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-def write_file(domain: str, content: str) -> tuple[bool, str]:
+def write_domain(domain: str, content: str) -> tuple[bool, str]:
     """
     Writes the specified content to a file.
     
@@ -28,22 +28,26 @@ def write_file(domain: str, content: str) -> tuple[bool, str]:
         return False, f"Error writing to file: {e}"
     return True, f"Content written to {filename}"
 
-def delete_file(domain: str) -> tuple[bool, str]:
+def remove_domain(domain: str) -> tuple[bool, str]:
     """
-    Deletes the specified file.
-    
+    Deletes the specified file and its containing directory if empty.
+
     :param domain: Path to the file that needs to be deleted.
     """
-    filename = f'{DIR}/{domain}/{domain}.conf'
+    dirname = f'{DIR}/{domain}'
+    filename = f'{dirname}/{domain}.conf'
     try:
         if not os.path.exists(filename):
             return False, f"File {filename} does not exist."
         os.remove(filename)
+        if os.path.exists(dirname) and not os.listdir(dirname):
+            os.rmdir(dirname)
     except Exception as e:
-        return False, f"Error deleting file: {e}"
-    return True, f"File {filename} deleted successfully."
+        return False, f"Error deleting file or directory: {e}"
+    return True, f"File {filename} and directory {dirname} deleted successfully."
 
-def backup_file(domain):
+
+def backup_domain(domain):
     """
     Backs up the specified file by copying it to a backup directory.
     
@@ -64,6 +68,6 @@ def backup_file(domain):
         return False, f"Error backing up file: {e}"
     return True, f"Backup created at {filename}"
 
-def exist_file(domain: str):
+def exist_domain(domain: str):
     filename = f'{DIR}/{domain}/{domain}.conf'
     return os.path.exists(filename)

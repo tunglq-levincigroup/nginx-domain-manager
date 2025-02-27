@@ -1,4 +1,5 @@
-from flask import jsonify
+from utils.response import api_response
 
 def index_controller():
-    return jsonify({"status": "running"}), 200
+    data = {"status": "running"}
+    return api_response(200, "OK", data)

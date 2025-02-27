@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, request
-from controllers.base import *
+from flask import Flask, request
+from utils.request import get_request_data
 from controllers.index import index_controller
 from controllers.domain import add_domain_controller, edit_domain_controller, remove_domain_controller
 
@@ -11,36 +11,22 @@ def index():
 
 @app.post('/domain/add')
 def add_domain():
-    # auth_response = validate_api_key(request.headers)
-    # if auth_response:
-    #     return auth_response
-
-    data = get_request_data(request.json, 'domain')
+    data = get_request_data(request.json, 'base-domain', 'domain')
     if isinstance(data, tuple):
         return data
 
-    return add_domain_controller(data.get('domain'))
-
+    return add_domain_controller(data['base-domain'], data['domain'])
 
 @app.put('/domain/edit')
-def edit_domain():
-    # auth_response = validate_api_key(request.headers)
-    # if auth_response:
-    #     return auth_response
-
-    data = get_request_data(request.json, 'old_domain', 'new_domain')
+def edit_alias():
+    data = get_request_data(request.json, 'base-domain', 'old-domain', 'domain')
     if isinstance(data, tuple):
         return data
 
-    return edit_domain_controller(data['old_domain'], data['new_domain'])
-
+    return edit_domain_controller(data['base-domain'], data['old-domain'], data['domain'])
 
 @app.delete('/domain/remove')
-def remove_domain():
-    # auth_response = validate_api_key(request.headers)
-    # if auth_response:
-    #     return auth_response
-
+def remove_alias():
     data = get_request_data(request.json, 'domain')
     if isinstance(data, tuple):
         return data
