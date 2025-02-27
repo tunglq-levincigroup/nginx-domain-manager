@@ -108,7 +108,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 # Install requirements
 sudo apt update
-sudo apt install nginx certbot python3 python3-certbot-nginx python3.10-venv
+sudo apt install nginx python3 python3.10-venv
 
 # -> built source code
 sudo adduser application
@@ -172,13 +172,20 @@ sudo systemctl reload nginx
 
 # Set up nginx manager server with sudo permission
 sudo visudo
-nginx-manager ALL=NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload, /usr/bin/certbot, /usr/bin/certbot-auto
+nginx-manager ALL=NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload
 sudo chmod +x /home/nginx-manager
+
+# Install
+su nginx-manager
+curl https://get.acme.sh | sh
+export PATH="~/.acme.sh:$PATH"
+exit
 
 # Clone project
 su nginx-manager
+source ~/.bashrc
 cd /home/nginx-manager
-git clone git@github.com:tunglq-levincigroup/nginx-domain-manager.git .
+git clone git@github.com:tunglq-levincigroup/nginx-domain-manager.git
 
 # edit file .evn
 cd /home/nginx-manager/nginx-domain-manager

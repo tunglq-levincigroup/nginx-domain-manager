@@ -1,5 +1,4 @@
 import subprocess
-from services.env import FLASK_ADMIN_EMAIL
 
 def reload_nginx():
     try:

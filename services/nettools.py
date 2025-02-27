@@ -1,5 +1,5 @@
 import socket
-from services.env import FLASK_SERVER_IP
+from utils.env import FLASK_SERVER_IP
 
 def ping(domain: str):
     try:

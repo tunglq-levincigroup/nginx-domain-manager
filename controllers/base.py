@@ -1,10 +1,5 @@
 from flask import jsonify
 import json
-from services.auth import authorize
-
-def validate_api_key(headers):
-    if not authorize(headers.get('X-API-KEY')):
-        return jsonify({"error": "Unauthorized"}), 401
     
 def get_request_data(data, *required_fields):
     instance = data
