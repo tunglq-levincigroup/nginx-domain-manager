@@ -1,4 +1,4 @@
-# A DOMAIN Integrations
+# Domain Integrations
 ## Variables
 
 | Variable          | Description                           |
