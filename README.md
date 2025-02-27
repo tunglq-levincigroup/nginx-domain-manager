@@ -132,7 +132,7 @@ sudo vi /etc/nginx/nginx.conf
     include include /home/nginx-manager/conf.d/**/*.conf;
 }
 
-# -> add sample html for test
+# Dựng trang web gốc
 su application
 
 mkdir -p /home/application/web/application.local/public_html/application.local
@@ -144,7 +144,7 @@ vi /home/application/web/application.local/public_html/index.html
 
 exit
 
-# -> add sample nginx conf for application.local
+# -> Config trang web gốc
 su nginx-manager
 vi /home/nginx-manager/conf.d/application.local.conf
 
@@ -180,6 +180,20 @@ su nginx-manager
 curl https://get.acme.sh | sh
 export PATH="~/.acme.sh:$PATH"
 exit
+
+sudo certbot --nginx -d test4.levincitest.com --agree-tos --email tung.le@levincigroup.com --dry-run
+
+server {
+    listen 80;
+    server_name test4.levincitest.com;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    # Các cấu hình khác của server
+}
+
 
 # Clone project
 su nginx-manager
