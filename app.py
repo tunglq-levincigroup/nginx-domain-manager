@@ -1,5 +1,6 @@
 from flask import Flask, request
 from utils.request import get_request_data
+from utils.auth import authorize
 from controllers.index import index_controller
 from controllers.domain import (
     add_domain_controller,
@@ -17,6 +18,11 @@ def index():
 @app.route('/domain/add', methods=['POST'])
 def add_domain():
     """Handle POST request to add a new domain."""
+    api_key = request.headers.get('X-API-KEY')
+    status, message = authorize(api_key)
+    if not status:
+        return message, 401
+
     status, data = get_request_data(request.json, 'base_domain', 'domain')
     if not status:
         return data, 400
@@ -26,6 +32,11 @@ def add_domain():
 @app.route('/domain/edit', methods=['PUT'])
 def edit_domain():
     """Handle PUT request to edit an existing domain."""
+    api_key = request.headers.get('X-API-KEY')
+    status, message = authorize(api_key)
+    if not status:
+        return message, 401
+
     status, data = get_request_data(request.json, 'base_domain', 'old_domain', 'domain')
     if not status:
         return data, 400
@@ -37,6 +48,11 @@ def edit_domain():
 @app.route('/domain/remove', methods=['DELETE'])
 def remove_domain():
     """Handle DELETE request to remove a domain."""
+    api_key = request.headers.get('X-API-KEY')
+    status, message = authorize(api_key)
+    if not status:
+        return message, 401
+    
     status, data = get_request_data(request.json, 'domain')
     if not status:
         return data, 400
