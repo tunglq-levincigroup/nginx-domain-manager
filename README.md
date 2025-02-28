@@ -92,7 +92,7 @@ sudo vi /etc/nginx/nginx.conf
 # /etc/nginx/nginx.conf
 {
     ...
-    include include /home/nginx-manager/conf.d/**/*.conf;
+    include /home/nginx-manager/conf.d/**/*.conf;
 }
 ```
 

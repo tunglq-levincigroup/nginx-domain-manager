@@ -2,7 +2,7 @@ from services.file import exist_domain, write_domain, remove_domain, backup_doma
 from services.nginx import test_nginx, reload_nginx
 from services.certbot import register_certbot
 from services.nettools import ping
-from services.template import generate_nginx_conf
+from services.template import generate_nginx_conf, generate_nginx_ssl_conf
 from utils.env import FLASK_BASE_URLS
 from utils.response import api_response
 from utils.logger import warn
@@ -11,7 +11,7 @@ from utils.logger import warn
 def add_domain_controller(base_domain: str, domain: str):
     try:
         # Validate base domain
-        if base_domain not in FLASK_BASE_URLS:
+        if FLASK_BASE_URLS not in base_domain:
             return api_response(400, "Base domain not found.")
 
         # Check if domain is duplicate with domain
@@ -48,6 +48,23 @@ def add_domain_controller(base_domain: str, domain: str):
         register_status, register_message = register_certbot(domain)
         if not register_status:
             return api_response(400, register_message)
+        
+        # Generate the Nginx configuration
+        content = generate_nginx_ssl_conf(base_domain, domain)
+
+        # Write the domain to the configuration
+        write, write_message = write_domain(domain, content)
+        if not write:
+            return api_response(400, write_message)
+        
+        # Test and reload Nginx
+        test_status, test_message = test_nginx()
+        if not test_status:
+            return api_response(400, test_message)
+        
+        reload_status, reload_message = reload_nginx()
+        if not reload_status:
+            return api_response(400, reload_message)
 
         return api_response(200, "Domain added successfully")
 
@@ -58,7 +75,7 @@ def add_domain_controller(base_domain: str, domain: str):
 def edit_domain_controller(base_domain: str, old_domain: str, domain: str):
     try:
         # Validate base domain
-        if base_domain not in FLASK_BASE_URLS:
+        if FLASK_BASE_URLS not in base_domain:
             return api_response(400, "Base domain not found.")
 
         # Check if domain is duplicate with domain
@@ -112,6 +129,23 @@ def edit_domain_controller(base_domain: str, old_domain: str, domain: str):
         backup_status, backup_message = backup_domain(domain)
         if not backup_status:
             warn(backup_message)
+
+        # Generate the Nginx configuration
+        content = generate_nginx_ssl_conf(base_domain, domain)
+
+        # Write the domain to the configuration
+        write, write_message = write_domain(domain, content)
+        if not write:
+            return api_response(400, write_message)
+        
+        # Test and reload Nginx
+        test_status, test_message = test_nginx()
+        if not test_status:
+            return api_response(400, test_message)
+        
+        reload_status, reload_message = reload_nginx()
+        if not reload_status:
+            return api_response(400, reload_message)
 
         remove_status, remove_message = remove_domain(old_domain)
         if not remove_status:
