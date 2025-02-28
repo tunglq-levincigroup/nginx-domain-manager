@@ -1,5 +1,6 @@
 from flask import Flask, request
 from utils.request import get_request_data
+from utils.response import api_response
 from utils.auth import authorize
 from controllers.index import index_controller
 from controllers.domain import (
@@ -21,11 +22,11 @@ def add_domain():
     api_key = request.headers.get('X-API-KEY')
     status, message = authorize(api_key)
     if not status:
-        return message, 401
+        return api_response(401, message)
 
     status, data = get_request_data(request.json, 'base_domain', 'domain')
     if not status:
-        return data, 400
+        return api_response(400, "Invalid parameters.")
 
     return add_domain_controller(data['base_domain'], data['domain'])
 
@@ -35,11 +36,11 @@ def edit_domain():
     api_key = request.headers.get('X-API-KEY')
     status, message = authorize(api_key)
     if not status:
-        return message, 401
+        return api_response(401, message)
 
     status, data = get_request_data(request.json, 'base_domain', 'old_domain', 'domain')
     if not status:
-        return data, 400
+        return api_response(400, "Invalid parameters.")
     
     return edit_domain_controller(
         data['base_domain'], data['old_domain'], data['domain']
@@ -51,10 +52,10 @@ def remove_domain():
     api_key = request.headers.get('X-API-KEY')
     status, message = authorize(api_key)
     if not status:
-        return message, 401
+        return api_response(401, message)
     
     status, data = get_request_data(request.json, 'domain')
     if not status:
-        return data, 400
+        return api_response(400, "Invalid parameters.")
 
     return remove_domain_controller(data['domain'])
