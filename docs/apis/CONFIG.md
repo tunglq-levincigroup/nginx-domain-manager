@@ -28,9 +28,19 @@ curl -X POST http://{SERVER_IP}:{SERVER_PORT}/dns/check \
 
 Example:
 ```bash
+curl -X POST http://68.183.228.52:8000/dns/check \
+     -H "Content-Type: application/json" \
+     -H "X-API-KEY: {API-KEY}" \
+     -d '{
+            "domains": ["brandlevinci.test88.info", "brandlevinci.test88.info"]
+        }'
+```
+
+Example:
+```bash
 curl -X POST http://165.232.167.175:8000/dns/check \
      -H "Content-Type: application/json" \
-     -H "X-API-KEY: abcd" \
+     -H "X-API-KEY: {API-KEY}" \
      -d '{
             "domains": ["test4.levincitest.com", "www.test4.levincitest.com"]
         }'
@@ -40,7 +50,7 @@ Response:
 - Success: Status Code = 200
 ```json
 {
-    "message": "Domain added successfully"
+    "message": "All DNS records are correct."
 }
 ```
 
@@ -69,9 +79,21 @@ curl -X POST http://{SERVER_IP}:{SERVER_PORT}/config/add \
 
 Example:
 ```bash
+curl -X POST http://68.183.228.52:8000/config/add \
+     -H "Content-Type: application/json" \
+     -H "X-API-KEY: {API-KEY}" \
+     -d '{
+            "base_domain": "mobilezone.gorightstage.com", 
+            "target_domain": "brandlevinci.test88.info", 
+            "redirect_domain": "www.brandlevinci.test88.info"
+        }'
+```
+
+Example:
+```bash
 curl -X POST http://165.232.167.175:8000/config/add  \
      -H "Content-Type: application/json" \
-     -H "X-API-KEY: abcd" \
+     -H "X-API-KEY: {API-KEY}" \
      -d '{
             "base_domain": "test4.test88.info", 
             "target_domain": "test4.levincitest.com", 
@@ -103,14 +125,24 @@ Request:
 curl -X DELETE http://{SERVER_IP}:{SERVER_PORT}/config/remove \
      -H "Content-Type: application/json" \
      -H "X-API-KEY: {API-KEY}" \
-     -d '{"target_domain": {TARGET_DOMAIN}'
+     -d '{"target_domain": {TARGET_DOMAIN}}'
+```
+
+Example:
+```bash
+curl -X DELETE http://68.183.228.52:8000/config/remove  \
+     -H "Content-Type: application/json" \
+     -H "X-API-KEY: {API-KEY}" \
+     -d '{
+            "target_domain": "brandlevinci.test88.info"
+        }'
 ```
 
 Example:
 ```bash
 curl -X DELETE http://165.232.167.175:8000/config/remove  \
      -H "Content-Type: application/json" \
-     -H "X-API-KEY: abcd" \
+     -H "X-API-KEY: {API-KEY}" \
      -d '{
             "target_domain": "test4.levincitest.com"
         }'
